@@ -34,7 +34,7 @@ mkdir -p "$MYRC_PATH" || die "Can not create scripts directory"
 
 # Searching for myrclib.sh library:
 MYRCLIB=""
-for MYRCLIB_DIR in "${MYRC_ROOT}/../" "${MYRC_ROOT}/"; do
+for MYRCLIB_DIR in "${MYRC_ROOT}/../share/myrc" "${MYRC_ROOT}/"; do
     if [ -f "$MYRCLIB_DIR/myrclib.sh" ]; then
         MYRCLIB="$MYRCLIB_DIR/myrclib.sh"
     fi
@@ -43,6 +43,9 @@ done
 [ "x$MYRCLIB" != "x" ] || die "Can't find myrclib.sh"
 
 export MYRCLIB
+
+# Symlink myrclib to the scripts directory:
+[ -e "${MYRC_PATH}/.myrclib.sh" ] || ln -s "$MYRCLIB" "${MYRC_PATH}/.myrclib.sh"
 
 process_one_service() {
     if [ \! -x "$1" ]; then
@@ -79,6 +82,18 @@ each_rc() {
     fi
 }
 
+initialize_crontab() {
+    # Initialize crontab:
+    MYRC_SHARE="$(dirname "$MYRCLIB")"
+    MYRC_UPDATE_CRONTAB="$MYRC_SHARE/update_crontab.py"
+    if [ \! -x "$MYRC_UPDATE_CRONTAB" ]; then
+        log "Can't find update_crontab.py"
+        exit 1
+    fi
+
+    env EDITOR="$MYRC_UPDATE_CRONTAB" crontab -e
+}
+
 case "$MYRC_MODE" in
     start)
         each_rc start
@@ -97,6 +112,9 @@ case "$MYRC_MODE" in
         ;;
     watch)
         each_rc watch
+        ;;
+    initialize)
+        initialize_crontab
         ;;
     *)
         die "Unknown mode $MYRC_MODE"
