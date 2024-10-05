@@ -1,0 +1,6 @@
+
+MYRC_EXEC="sleep"
+MYRC_ARGS="1"
+
+. "$MYRCLIB"
+

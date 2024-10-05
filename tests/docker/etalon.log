@@ -1,0 +1,10 @@
+Executing busybox start
+Starting: docker run --detach --rm --label myrclabel=busybox busybox sleep 20
+DOCKERID
+STATUS: 0
+Executing busybox status
+STATUS: 0
+Executing busybox stop
+Stopping: DOCKERID...
+DOCKERID
+STATUS: 0

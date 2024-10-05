@@ -1,0 +1,106 @@
+#!/bin/sh
+# MyRC - personal rc.d for user
+# This file is relased under terms of MIT license.
+# Author: Mikhail Ryzhov (rymiser@gmail.com)
+
+# Utilities:
+die() {
+    echo "Error: $*" 1>&2
+    exit 1
+}
+
+log() {
+    echo "$(date '+%Y-%m-%dT%H:%M:%S%z'): $*"
+}
+
+# Initialization:
+MYRC_ROOT="$(cd $(dirname "$0"); pwd)"
+MYRC_PATH="${MYRC_PATH=$HOME/.myrc}"
+MYRC_MODE="$1"
+if [ "x$MYRC_MODE" = "x" ]; then
+    MYRC_MODE=start
+fi
+export MYRC_PATH
+export MYRC_MODE
+export MYRC_ROOT
+MYRC_LIST=""
+shift
+while [ "x$1" != "x" ]; do
+    MYRC_LIST="$MYRC_LIST '$1'"
+done
+export MYRC_LIST
+
+mkdir -p "$MYRC_PATH" || die "Can not create scripts directory"
+
+# Searching for myrclib.sh library:
+MYRCLIB=""
+for MYRCLIB_DIR in "${MYRC_ROOT}/../" "${MYRC_ROOT}/"; do
+    if [ -f "$MYRCLIB_DIR/myrclib.sh" ]; then
+        MYRCLIB="$MYRCLIB_DIR/myrclib.sh"
+    fi
+done
+
+[ "x$MYRCLIB" != "x" ] || die "Can't find myrclib.sh"
+
+export MYRCLIB
+
+process_one_service() {
+    if [ \! -x "$1" ]; then
+        # Skipping not-executable files
+        continue
+    fi
+
+    MYRC_SERVICE="$(basename "$1")"
+    export MYRC_SERVICE
+
+    MYRC_SCRIPT="$1"
+    export MYRC_SCRIPT
+
+    MYRC_PID="$MYRC_PATH/.pid-$MYRC_SERVICE"
+    export MYRC_PID
+
+    log "Executing $MYRC_SERVICE $MYRC_MODE"
+    (cd /; /bin/sh "$1" "$MYRC_MODE")
+}
+
+each_rc() {
+    if [ "x$MYRC_LIST" != "x" ]; then
+        for rc in $MYRC_LIST; do
+            if [ \! -f "$MYRC_PATH/$rc" ]; then
+                log "WARNING: unknown service $rc"
+            else
+                process_one_service "$MYRC_PATH/$rc"
+            fi
+        done
+    else
+        for rc in "$MYRC_PATH"/*; do
+            process_one_service "$rc"
+        done
+    fi
+}
+
+case "$MYRC_MODE" in
+    start)
+        each_rc start
+        ;;
+    stop)
+        each_rc stop
+        ;;
+    restart)
+        each_rc restart
+        ;;
+    reload)
+        each_rc reload
+        ;;
+    status)
+        each_rc status
+        ;;
+    watch)
+        each_rc watch
+        ;;
+    *)
+        die "Unknown mode $MYRC_MODE"
+        ;;
+esac
+
+exit 0

@@ -1,0 +1,4 @@
+
+MYRC_DOCKER="busybox sleep 20"
+
+. "$MYRCLIB"

@@ -1,0 +1,13 @@
+Executing sleep1 start
+Executing sleep10 start
+STATUS: 0
+Executing sleep1 status
+sleep1: FAILED
+Executing sleep10 status
+sleep10: OK
+STATUS: 0
+Executing sleep1 stop
+pids were not killed
+No process in pidfile '/home/rymis/src/myrc/tests/exec/myrc/.pid-sleep1' found running; none killed.
+Executing sleep10 stop
+STATUS: 0

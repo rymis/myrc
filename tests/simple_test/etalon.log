@@ -1,0 +1,9 @@
+Executing srv0 start
+Executing srv1 start
+STATUS: 0
+Executing srv0 status
+Executing srv1 status
+STATUS: 0
+Executing srv0 stop
+Executing srv1 stop
+STATUS: 0
