@@ -6,6 +6,8 @@ ROOT="$(cd $(dirname "$0"); pwd)"
 export ROOT
 export SLEEP_BETWEEN=0
 
+export MYRC_DOCKER_EXECUTABLE="$ROOT/docker.sh"
+
 RES=0
 
 run_one_test() {

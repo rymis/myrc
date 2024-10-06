@@ -67,7 +67,7 @@ MYRC_DOCKER="-p 8000:80 -v /tmp:/www busybox httpd -h /www -f"
 . "$MYRCLIB"
 ```
 
-This command starts something like `docker run --rm --label myrclabel=httpd -p 8000:80 -v /tmp:/www busybox httpd -h /www -f` and allows to restart and control the container.
+This command starts something like `docker run --detach --rm --label myrclabel=httpd -p 8000:80 -v /tmp:/www busybox httpd -h /www -f` and allows to restart and control the container.
 
 ### Watch mode
 If you start `myrc watch` (or the command for one service) myrc checks the status and if service failed restarts it. So, you can add `myrc watch` to crontab and run it once a while to restart failed services.

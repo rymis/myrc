@@ -7,24 +7,25 @@
 
 export MYRC_SERVICE="$(basename "$0")"
 export MYRC_PIDFILE="${MYRC_PATH}/.pid-${MYRC_SERVICE}"
+export MYRC_DOCKER_EXECUTABLE="${MYRC_DOCKER_EXECUTABLE=docker}"
 
 ## Get status of docker container by label
 docker_status() {
-    docker container list -f "label=myrclabel=$MYRC_SERVICE" | awk 'BEGIN {first=1;} { if (!first) print $1; first = 0; }' | grep RUNNING
+    "${MYRC_DOCKER_EXECUTABLE}" container ls -f "label=myrclabel=$MYRC_SERVICE" | awk 'BEGIN {first=1;} { if (!first) print $1; first = 0; }' | grep RUNNING
 }
 
 ## Get status of docker container by label
 docker_stop() {
-    docker container ps --filter "label=myrclabel=$MYRC_SERVICE" | awk '/^[a-f0-9]+ / { print $1; }' | while read MYRC_docker_id; do
+    "${MYRC_DOCKER_EXECUTABLE}" container ls --filter "label=myrclabel=$MYRC_SERVICE" | awk '/^[a-f0-9]+ / { print $1; }' | while read MYRC_docker_id; do
         echo "Stopping: $MYRC_docker_id..."
-        docker container stop -t 5 $MYRC_docker_id
+        "${MYRC_DOCKER_EXECUTABLE}" container stop -t 5 $MYRC_docker_id
     done
 }
 
 ## Start docker container using arguments sent to this command
 docker_start() {
     echo "Starting: docker run --detach --rm --label myrclabel=$MYRC_SERVICE $@"
-    docker run --detach --rm --label myrclabel="$MYRC_SERVICE" "$@"
+    "${MYRC_DOCKER_EXECUTABLE}" run --detach --rm --label myrclabel="$MYRC_SERVICE" "$@"
 }
 
 ## Start daemon using start-stop-daemon tool.
