@@ -3,12 +3,8 @@ Executing sleep10 start
 STATUS: 0
 Executing sleep1 watch
 sleep1: FAILED
-Failed service. Trying to restart
-pids were not killed
-No process in pidfile '/home/rymis/src/myrc/tests/watch/myrc/.pid-sleep1' found running; none killed.
 Executing sleep10 watch
 sleep10: OK
-Status OK, nothing to do
 STATUS: 0
 Executing sleep1 status
 sleep1: FAILED

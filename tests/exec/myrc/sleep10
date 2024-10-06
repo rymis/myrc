@@ -2,5 +2,6 @@
 MYRC_EXEC="sleep"
 MYRC_ARGS="10"
 
-. "$MYRCLIB"
+R="$(cd "$(dirname "$0")"; pwd)"
+. "$R/.myrclib.sh"
 
