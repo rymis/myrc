@@ -8,6 +8,9 @@ export SLEEP_BETWEEN=0
 
 export MYRC_DOCKER_EXECUTABLE="$ROOT/docker.sh"
 
+# Make replacement regular expression for path:
+PATHRE="s/$(echo -n "$ROOT" | sed 's/[^a-zA-Z0-9]/./g')/ROOT/g"
+
 RES=0
 
 run_one_test() {
@@ -21,7 +24,7 @@ run_one_test() {
     rm -f "$TMPLOG"
     touch "$TMPLOG"
     while [ "x$1" != "x" ]; do
-        sh ../myrc "$1" | sed 's/^[0-9T:\+-]*\s*//g;s/[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]*/DOCKERID/g' >> "$TMPLOG"
+        sh ../myrc "$1" | sed 's/^[0-9T:\+-]*\s*//g;s/[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]*/DOCKERID/g' | sed "$PATHRE" >> "$TMPLOG"
         echo "STATUS: $?" >> "$TMPLOG"
         shift
         sleep $SLEEP_BETWEEN

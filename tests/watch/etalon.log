@@ -13,6 +13,6 @@ sleep10: OK
 STATUS: 0
 Executing sleep1 stop
 pids were not killed
-No process in pidfile '/home/rymis/src/myrc/tests/watch/myrc/.pid-sleep1' found running; none killed.
+No process in pidfile 'ROOT/watch/myrc/.pid-sleep1' found running; none killed.
 Executing sleep10 stop
 STATUS: 0
