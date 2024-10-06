@@ -26,7 +26,8 @@ export MYRC_ROOT
 MYRC_LIST=""
 shift
 while [ "x$1" != "x" ]; do
-    MYRC_LIST="$MYRC_LIST '$1'"
+    MYRC_LIST="$MYRC_LIST '$MYRC_PATH/$1'"
+    shift
 done
 export MYRC_LIST
 
@@ -69,10 +70,10 @@ process_one_service() {
 each_rc() {
     if [ "x$MYRC_LIST" != "x" ]; then
         for rc in $MYRC_LIST; do
-            if [ \! -f "$MYRC_PATH/$rc" ]; then
+            if eval "[ \! -x $rc ]"; then
                 log "WARNING: unknown service $rc"
             else
-                process_one_service "$MYRC_PATH/$rc"
+                eval process_one_service $rc
             fi
         done
     else
